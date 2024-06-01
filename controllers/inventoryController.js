@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const inventoryModel = require("../models/inventoryModel");
 const userModel = require("../models/userModel");
 
@@ -20,7 +21,7 @@ const createInventoryController = async (req, res) => {
     if (req.body.inventoryType == "out") {
       const requestedBloodGroup = req.body.bloodGroup;
       const requestedQuantityOfBlood = req.body.quantity;
-      const organisation =  req.body.userId;
+      const organisation = new mongoose.Types.ObjectId(req.body.userId);
       //calculate Blood Quanitity
       const totalInOfRequestedBlood = await inventoryModel.aggregate([
         {
@@ -169,7 +170,7 @@ const getDonarsController = async (req, res) => {
     const donorId = await inventoryModel.distinct("donar", {
       organisation,
     });
-    //console.log(donorId);
+    // console.log(donorId);
     const donars = await userModel.find({ _id: { $in: donorId } });
 
     return res.status(200).send({
